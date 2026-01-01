@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy New Year ✨</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body {
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #1a1a40, #000);
+      color: white;
+    }
+
+    /* CENTER CONTENT */
+    .container {
+      position: relative;
+      z-index: 10;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 4rem;
+      letter-spacing: 4px;
+      animation: glow 2s infinite alternate;
+    }
+
+    h2 {
+      margin-top: 10px;
+      font-size: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .share-text {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 700px;
+      opacity: 0.95;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .signature {
+      margin-top: 25px;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #ffccdd;
+      animation: glowSign 2s infinite alternate;
+    }
+
+    @keyframes glowSign {
+      from { text-shadow: 0 0 10px #ff66aa; }
+      to { text-shadow: 0 0 25px #ff99cc; }
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ffcc00, 0 0 20px #ff9900; }
+      to   { text-shadow: 0 0 25px #00eaff, 0 0 50px #0077ff; }
+    }
+
+    /* BUTTON */
+    button {
+      margin-top: 30px;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffcc00, #ff0066);
+      color: black;
+      font-weight: bold;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(255,255,255,0.7);
+    }
+
+    /* FIREWORKS */
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* FLOATING BALLOONS */
+    .balloon {
+      position: absolute;
+      bottom: -150px;
+      width: 40px;
+      height: 55px;
+      background: red;
+      border-radius: 50% 50% 50% 50%;
+      animation: float 12s linear infinite;
+      opacity: 0.8;
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: white;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-120vh); }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="fireworks"></canvas>
+
+  <div class="container">
+    <h1>🎉 HAPPY NEW YEAR 2026 🎉</h1>
+    <h2>Wishing You Success, Happiness & Peace</h2>
+    <p class="share-text">May this New Year bring you new opportunities, good health, positive vibes,<br/>and beautiful moments with your loved ones. 💫<br/><br/>Thank you for being a part of my journey. Let’s make 2026 unforgettable! 🎊</p>
+    <p class="signature">— With love, <strong>Rakshith</strong> ❤️</p>
+    <button onclick="launchFireworks()">Celebrate 🎆</button>
+  </div>
+
+  <script>
+    /* FIREWORKS CANVAS */
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    let particles = [];
+
+    function createFirework(x, y) {
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x, y,
+          angle: Math.random() * 2 * Math.PI,
+          speed: Math.random() * 6 + 2,
+          life: 100,
+          color: `hsl(${Math.random() * 360},100%,60%)`
+        });
+      }
+    }
+
+    function launchFireworks() {
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+          createFirework(Math.random() * canvas.width, Math.random() * canvas.height / 2);
+        }, i * 300);
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, i) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.life--;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+        if (p.life <= 0) particles.splice(i, 1);
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    /* BALLOONS */
+    const colors = ['#ff4d4d', '#ffd11a', '#4dff88', '#4dd2ff', '#cc66ff'];
+    for (let i = 0; i < 20; i++) {
+      const b = document.createElement('div');
+      b.className = 'balloon';
+      b.style.left = Math.random() * 100 + 'vw';
+      b.style.background = colors[Math.floor(Math.random() * colors.length)];
+      b.style.animationDuration = (8 + Math.random() * 8) + 's';
+      document.body.appendChild(b);
+    }
+  </script>
+</body>
+</html>
